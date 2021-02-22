@@ -2,12 +2,28 @@ require("dotenv").config()
 const express = require('express')
 const app = express()
 const errorHandler = require('./handlers/error')
-const User = require("./models/user")
+const {Message} = require("./models")
 const authRoutes = require("./routes/auth")
+const messageRoutes = require("./routes/messages")
+const {loginRequired, ensureCorrectUser} = require("./middleware/auth")
 
 app.use(express.json()) 
 app.use(express.urlencoded({ extended: true })) 
 app.use("/api/auth", authRoutes)
+app.use("/api/users/:id/messages", loginRequired,ensureCorrectUser, messageRoutes)
+
+app.get("/api/messages", async function(req,res,next) {
+    try {
+        const message = await Message.find().sort({createdAt: "desc"})
+        .populate("user", {
+            username: true,
+            profileImageUrl: true
+        })
+        return res.status(200).json(message) 
+    } catch (err) {
+        return next(err)
+    }
+})
 
 app.use((req, res, next) => {
     let err = new Error("Not Found")

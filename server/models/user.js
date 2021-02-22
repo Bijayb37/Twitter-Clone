@@ -1,17 +1,13 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 
-mongoose.set("debug", true)
-mongoose.connect('mongodb://localhost:27017/first', {useNewUrlParser: true, useUnifiedTopology: true})
-
-
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
         unique: true,
         required: true
     },
-    userName: {
+    username: {
         type: String,
         unique: true,
         required: true
@@ -22,7 +18,11 @@ const userSchema = new mongoose.Schema({
     },
     profileImageUrl: {
         type: String
-    }
+    },
+    message: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message"
+    }]
 })
 
 userSchema.pre("save", async function(next) {
@@ -38,7 +38,7 @@ userSchema.pre("save", async function(next) {
     }
 })
 
-userSchema.method.comparePassword = async function(candidatePassword, next) {
+userSchema.methods.comparePassword = async function(candidatePassword, next) {
     try {
         let isMatch = await bcrypt.compare(candidatePassword, this.password)
         return isMatch
@@ -47,6 +47,6 @@ userSchema.method.comparePassword = async function(candidatePassword, next) {
     }
 }
 
-const User = new mongoose.model("User", userSchema)
+const User = mongoose.model("User", userSchema)
 
 module.exports = User
