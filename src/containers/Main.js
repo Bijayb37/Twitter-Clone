@@ -5,6 +5,7 @@ import AuthForm from '../components/AuthForm'
 import Homepage from '../components/Homepage'
 import { authUser } from "../store/actions/auth"
 import { removeError } from "../store/actions/error"
+import NewMessageForm from './NewMessageForm'
 
 const Main = props => {
     const { authUser, errors, removeError, currentUser } = props
@@ -12,6 +13,7 @@ const Main = props => {
         <div className="container">
             <Switch>
                 <Route exact path="/" render={props => <Homepage currentUser={currentUser} {...props} />} />
+                <Route exact path="/users/:id/messages/new" render={props => <NewMessageForm removeError={removeError} currentUser={currentUser} {...props} />} />
                 <Route exact path="/signin"
                     render={props => (
                         <AuthForm

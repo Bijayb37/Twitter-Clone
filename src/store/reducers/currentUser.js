@@ -1,7 +1,7 @@
 import {SET_CURRENT_USER} from "../actionTypes"
 
 const DEFAULT_STATE = {
-    isAuthenicated: false,
+    isAuthenticated: false,
     user: {}
 }
 

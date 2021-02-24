@@ -33,7 +33,6 @@ export function authUser(type, userData) {
                     resolve()
                 })
                 .catch(err => {
-
                     dispatch(addError(err.message))
                     reject(); // indicate the API call failed
                   });

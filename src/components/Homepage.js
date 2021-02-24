@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import MessageList from "../containers/MessageList"
+import MessageTimeline from "./MessageTimeline"
 
 const Homepage = props => {
     const {currentUser} = props
@@ -14,7 +14,7 @@ const Homepage = props => {
     }
     return (
         <div className="container">
-            <MessageList />
+            <MessageTimeline  {...currentUser}/>
         </div>
     )
 

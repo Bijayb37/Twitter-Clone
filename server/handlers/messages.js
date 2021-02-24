@@ -6,6 +6,7 @@ exports.CreateMessage = async function(req, res, next) {
         text: req.body.text,
         user: req.params.id
      })
+
      let foundUser = await User.findById(req.params.id)
      foundUser.message.push(message.id)
      await foundUser.save()
@@ -19,7 +20,6 @@ exports.CreateMessage = async function(req, res, next) {
         return next(err)
     }
 }
-
 
 // api/users/:id/messages/:message_id
 exports.getMessage = async function(req, res, next) {
