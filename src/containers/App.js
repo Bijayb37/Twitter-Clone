@@ -1,7 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import {configureStore} from "../store"
 import { setAuthorizationToken, setCurrentUser } from '../store/actions/auth';
 import Main from './Main';
@@ -18,7 +18,6 @@ if(localStorage.jwtToken) {
     store.dispatch(setCurrentUser({}))
   }
 }
-
 
 const App = () => (
   <Provider store={store}>

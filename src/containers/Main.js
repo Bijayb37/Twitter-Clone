@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import AuthForm from '../components/AuthForm'
 import Homepage from '../components/Homepage'
 import { authUser } from "../store/actions/auth"

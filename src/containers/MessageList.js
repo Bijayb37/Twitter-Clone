@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
-import { getMessages, deleteMessage } from "../store/actions/messages"
+import { getMessages, deleteMessage, updateLikes, patchLikes, patchText } from "../store/actions/messages"
 import MessageItem from '../components/MessageItem'
 
 function MessageList(props) {
-    const { messages, getMessages, deleteMessage, currentUser } = props
+    const {patchText, messages, getMessages, deleteMessage, currentUser, patchLikes } = props
 
     useEffect(() => {
-        getMessages()
+        getMessages() // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const messageList = messages.map((m) => (
         <MessageItem
             key={m._id}
+            likes={m.likes}
+            edit={patchText}
             messageId={m._id}
+            update={patchLikes}
             deleteMessage={deleteMessage}
             date={m.createdAt}
             text={m.text}
@@ -43,4 +46,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, { getMessages, deleteMessage })(MessageList)
+export default connect(mapStateToProps, { patchText, getMessages, deleteMessage, updateLikes, patchLikes })(MessageList)

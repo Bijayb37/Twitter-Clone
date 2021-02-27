@@ -1,6 +1,6 @@
 import {apiCall} from "../../services/api"
 import {addError} from "./error"
-import {LOAD_MESSAGES, REMOVE_MESSAGES} from "../actionTypes"
+import {LOAD_MESSAGES, REMOVE_MESSAGES, UPDATE_LIKES, UPDATE_MESSAGE} from "../actionTypes"
 
 export function loadMessages(messages) {
     return {
@@ -13,6 +13,37 @@ export function removeMessages(id) {
     return {
         type: REMOVE_MESSAGES,
         id
+    }
+}
+
+export function updateLikes(id,delta) {
+    return {
+        type: UPDATE_LIKES,
+        id,
+        delta
+    }
+}
+export function updateMessage(id, text) {
+    return {
+        type: UPDATE_MESSAGE,
+        id,
+        text
+    }
+}
+
+export function patchLikes(id, message_id,likes, delta) {
+    return (dispatch, getState) => {
+        apiCall("patch", `api/users/${id}/messages/${message_id}`, {likes: likes + delta})
+        .then(res => dispatch(updateLikes(message_id, delta)))
+        .catch(err => dispatch(addError(err.message)))
+    }
+}
+
+export function patchText(id, message_id, text) {
+    return (dispatch, getState) => {
+        apiCall("patch", `api/users/${id}/messages/${message_id}/edit`, {text})
+        .then(res => dispatch(updateMessage(message_id, res.text)))
+        .catch(err => dispatch(addError(err.message)))
     }
 }
 

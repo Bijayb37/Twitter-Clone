@@ -1,11 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import defaultProfileImg from '../images/default-profile-image.jpg'
-import deleteMessage from "../store/actions/messages"
+import Toggler from './Toggler'
 
 const MessageItem = (props) => {
-    const { date, profileImgUrl, text, username, deleteMessage, messageId, userId, isCorrectUser } = props
+    const {
+        update,
+         date,
+         profileImgUrl,
+         text,
+         username,
+         deleteMessage,
+         messageId,
+         userId,
+         isCorrectUser,
+         likes,
+         edit
+    } = props
+    const [editing, toggle] = Toggler(false) 
+    const [hover, hoverToggle] = Toggler(false) 
+    const [newText, setNewText] = useState(text)
+    function editText(e) {
+        e.preventDefault()
+        edit(userId, messageId, newText)
+        toggle()
+    }
+
     return (
         <div>
             <li className="list-group-item">
@@ -17,15 +38,34 @@ const MessageItem = (props) => {
                             {date}
                         </Moment>
                     </span>
-                    <i class="bi bi-three-dots" data-bs-toggle="dropdown"></i>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        
-                        <li>{isCorrectUser && <a onClick={() => deleteMessage(userId, messageId)} class="dropdown-item" href="#">Delete Message</a>}</li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                    <p>{text}</p>
-                    
+                    {isCorrectUser && (
+                     <div>   
+                        <i className="bi bi-three-dots" data-bs-toggle="dropdown"></i>
+                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li onClick={toggle} className="dropdown-item" >Edit Message</li>
+                        <li onClick={() => deleteMessage(userId, messageId)} className="dropdown-item" href="#">Delete Message</li>
+                        </ul>
+                      </div>      
+                    )}
+                    <div className="heart">
+                        <div>
+                            <i
+                             className={hover ? "bi bi-heart-fill" : "bi bi-heart"}
+                             onClick={() => update(userId, messageId,likes, +1)}
+                             onMouseEnter={hoverToggle}
+                             onMouseLeave={hoverToggle}
+                            > Like Post</i>
+                        </div>
+                        <p>{likes}</p>
+                    </div>
+                    {editing 
+                        ? <form onSubmit={editText} className="edit-form">
+                            <input value={newText} onChange={(e) => setNewText(e.target.value)} className="form-control" type="text" name="new-text" id="new-text"/>
+                            <button className="edit-btn btn btn-outline-info">click me</button>
+                          </form>
+                        : <p>{text}</p> 
+                    }
+                
                 </div>
             </li>
         </div>

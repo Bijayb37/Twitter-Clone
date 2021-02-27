@@ -21,6 +21,23 @@ exports.CreateMessage = async function(req, res, next) {
     }
 }
 
+// api/users/:id/messages
+exports.getUsersMessage =  async function(req,res,next) {
+    try {
+        const foundUser = await User.findById(req.params.id)
+        .populate("messages")    
+
+        const message = await Message.find().sort({createdAt: "desc"})
+        .populate("user", {
+            username: true,
+            profileImageUrl: true
+        })
+        return res.status(200).json(message) 
+    } catch (err) {
+        return next(err)
+    }
+}
+
 // api/users/:id/messages/:message_id
 exports.getMessage = async function(req, res, next) {
     try {
@@ -36,12 +53,39 @@ exports.getMessage = async function(req, res, next) {
 // api/users/:id/messages/:message_id
 exports.deleteMessage = async function(req, res, next) {
     try {
-        const message = await Message.findByIdAndDelete(req.params.message_id)
+        const message = await Message.findById(req.params.message_id)
+        await message.remove()
+        
         return res.status(200).json({
             removedStatus: "deleted",
             message: message.text
         })
     }   catch (err) {
+        return next(err)
+    }
+}
+
+// api/users/:id/messages/:message_id
+exports.updateLikes = async function(req, res, next) {
+    try {
+        const message = await Message.findByIdAndUpdate(req.params.message_id, {likes: req.body.likes }, {new:true})
+        return res.status(200).json({
+            likes: message.likes
+        })
+    } catch (err) {
+        return next(err)
+    }
+}
+
+// api/users/:id/messages/:message_id/edit
+exports.editMessage = async function(req, res, next) {
+    console.log(req.body)
+    try {
+        const message = await Message.findByIdAndUpdate(req.params.message_id, {text: req.body.text}, {new: true})
+        return res.status(200).json({
+            text: message.text
+        })
+    } catch (err) {
         return next(err)
     }
 }

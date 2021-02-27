@@ -1,7 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
 import { Link } from "react-router-dom"
-import Logo from '../images/dog.jpg'
 import {logout} from "../store/actions/auth"
 
 function Navbar(props) {
@@ -11,13 +10,11 @@ function Navbar(props) {
         logout()
     }
     return(
-        <>
         <nav className="navbar navbar-expand">
             <div className="container-fluid">
                <Link to="/" className="navbar-brand">
-                   <img src={Logo} alt="warbler-home" />
+                    Home
                    </Link> 
-
             
                 {currentUser.isAuthenticated ? (
                     <ul className="nav navbar-nav navbar-right">
@@ -40,7 +37,6 @@ function Navbar(props) {
                 )}
             </div>
         </nav>
-      </>
     )
 }
 

@@ -6,10 +6,12 @@ const {Message} = require("./models")
 const authRoutes = require("./routes/auth")
 const messageRoutes = require("./routes/messages")
 const {loginRequired, ensureCorrectUser} = require("./middleware/auth")
+const {updateLikes} = require("./handlers/messages")
 
 app.use(express.json()) 
 app.use(express.urlencoded({ extended: true })) 
 app.use("/api/auth", authRoutes)
+app.patch("/api/users/:id/messages/:message_id", updateLikes)
 app.use("/api/users/:id/messages", loginRequired,ensureCorrectUser, messageRoutes)
 
 app.get("/api/messages", async function(req,res,next) {
